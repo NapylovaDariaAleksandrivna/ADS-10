@@ -52,7 +52,7 @@ class Tree {
         std::vector<char> ch;
         Perm(root, &ch);
     }
-    std::vector<char> PermH(int i) const {
+    std::vector<char> func(int i) const {
         if (permutations.size() < i) return std::vector<char>();
         return permutations[i];
     }
