@@ -7,23 +7,24 @@
 class Tree {
  private:
     struct Node {
-        char symbol;
         std::vector<Node*> descendants;
+        char symbol;
     };
     Node* root;
     std::vector<std::vector<char>> permutations;
-    Node* Create(Node* root, const std::vector<char> permutations) {
+    Node* Create(Node* root, std::vector<char> permutations) {
         if (!root) {
-          root = new Node;
+            root = new Node;
         }
         if (permutations.empty()) {
-          return root;
+            return root;
         }
         for (int i = 0; i < permutations.size(); i++) {
             std::vector<char> vect = permutations;
-            Node* val = new Node;
-            val->symbol = permutations[i];
-            root->descendants.push_back(val);
+            Node* copy = new Node;
+            copy->symbol = permutations[i];
+            root->descendants.push_back(copy);
+            vect.erase(vect.begin() + i);
             Create(root->descendants[i], vect);
         }
         return root;
@@ -33,12 +34,12 @@ class Tree {
             ch->push_back(root->descendants[i]->symbol);
             if (root->descendants[i]->descendants.empty()) {
                 return *ch;
-            }
+        }
             Perm(root->descendants[i], ch);
             if (ch->size() != 1) {
                 permutations.push_back(*ch);
             }
-            for (int j = 0; j < ch->size(); j++) {
+            for (int j = 0; j< ch->size(); j++) {
                 ch->pop_back();
             }
         }
@@ -46,17 +47,14 @@ class Tree {
     }
 
  public:
-  std::vector<char> func(int i) const {
-       if (permutations.size() < i) {
-         return std::vector<char>();
-       }
-       return permutations[i];
-  }
-  explicit Tree(std::vector<char> permutations): root(nullptr) {
-    root = Create(root, permutations);
-    std::vector<char> ch;
-    Perm(root, &ch);
-  }
-}
-
+    explicit Tree(std::vector<char> descendants): root(nullptr) {
+        root = Create(root, descendants);
+        std::vector<char> ch;
+        Perm(root, &ch);
+    }
+    std::vector<char> PermH(int i) const {
+        if (permutations.size() < i) return std::vector<char>();
+        return permutations[i];
+    }
+};
 #endif  // INCLUDE_TREE_H_
